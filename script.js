@@ -83,7 +83,7 @@ function renderCart() {
                 <div class="empty-cart-icon">🛒</div>
                 <h3>Tu carrito está vacío</h3>
                 <p style="color: #666; margin-bottom: 2rem;">¡Agrega algunos productos increíbles!</p>
-                <a href="#" class="button primary-button continue-shopping" onclick="toggleCart()">Continuar Comprando</a>
+                <a href="producto" class="button primary-button continue-shopping" onclick="toggleCart()">Continuar Comprando</a>
             </div>
         `;
         return;
