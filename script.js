@@ -83,7 +83,7 @@ function renderCart() {
                 <div class="empty-cart-icon">🛒</div>
                 <h3>Tu carrito está vacío</h3>
                 <p style="color: #666; margin-bottom: 2rem;">¡Agrega algunos productos increíbles!</p>
-                <a href="producto" class="button primary-button continue-shopping" onclick="toggleCart()">Continuar Comprando</a>
+                <a href="#productos" class="button primary-button continue-shopping" onclick="toggleCart()">Continuar Comprando</a>
             </div>
         `;
         return;
@@ -123,7 +123,7 @@ function renderCart() {
             <p style="color: #666; margin-bottom: 1rem;">${totalItems} producto${totalItems !== 1 ? 's' : ''} en tu carrito</p>
             <button class="checkout-btn" onclick="checkout()">Proceder al Pago 🚀</button>
             <br><br>
-            <a href="productos" class="continue-shopping" onclick="toggleCart()" style="font-size: 0.9rem;">← Continuar Comprando</a>
+            <a href="#productos" class="continue-shopping" onclick="toggleCart()" style="font-size: 0.9rem;">← Continuar Comprando</a>
         </div>
     `;
 }
