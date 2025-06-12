@@ -45,21 +45,32 @@ function addToCart(productName, price, icon, event) {
 }
 
 // Alterna la visibilidad de la sección del carrito
-function toggleCart() {
+// Ahora acepta un argumento opcional `scrollToTarget` para desplazar a una sección específica
+function toggleCart(scrollToTarget = null) {
     const cartSection = document.getElementById('carrito');
     const otherSections = document.querySelectorAll('main > section:not(#carrito)'); // Todas las secciones excepto el carrito
 
     if (cartSection.classList.contains('active')) {
-        // Ocultar carrito y mostrar otras secciones
+        // Ocultar carrito
         cartSection.classList.remove('active');
-        // Si hay una sección activa (por ejemplo, inicio), desplázate a ella
-        const activeSection = document.querySelector('section.active-view');
-        if (activeSection) {
-            activeSection.scrollIntoView({ behavior: 'smooth' });
+        otherSections.forEach(section => section.style.display = 'block'); // Vuelve a mostrar todas las secciones
+
+        // Si se especificó un objetivo de scroll, vamos a él
+        if (scrollToTarget) {
+            const targetElement = document.querySelector(scrollToTarget);
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth' });
+            }
         } else {
-            // Si no hay una activa, muestra todas (comportamiento por defecto)
-            otherSections.forEach(section => section.style.display = 'block');
+            // Si no hay un objetivo específico y se estaba mostrando una sección, vuelve a esa
+            const activeSection = document.querySelector('section.active-view');
+            if (activeSection) {
+                activeSection.scrollIntoView({ behavior: 'smooth' });
+            }
         }
+        // Limpiamos la clase 'active-view' después de usarla
+        otherSections.forEach(section => section.classList.remove('active-view'));
+
     } else {
         // Ocultar otras secciones y mostrar carrito
         otherSections.forEach(section => {
@@ -83,7 +94,7 @@ function renderCart() {
                 <div class="empty-cart-icon">🛒</div>
                 <h3>Tu carrito está vacío</h3>
                 <p style="color: #666; margin-bottom: 2rem;">¡Agrega algunos productos increíbles!</p>
-                <a href="#productos" class="button primary-button continue-shopping" onclick="toggleCart()">Continuar Comprando</a>
+                <a href="#productos" class="button primary-button continue-shopping" onclick="toggleCart('#productos')">Continuar Comprando</a>
             </div>
         `;
         return;
@@ -123,7 +134,7 @@ function renderCart() {
             <p style="color: #666; margin-bottom: 1rem;">${totalItems} producto${totalItems !== 1 ? 's' : ''} en tu carrito</p>
             <button class="checkout-btn" onclick="checkout()">Proceder al Pago 🚀</button>
             <br><br>
-            <a href="#productos" class="continue-shopping" onclick="toggleCart()" style="font-size: 0.9rem;">← Continuar Comprando</a>
+            <a href="#productos" class="continue-shopping" onclick="toggleCart('#productos')" style="font-size: 0.9rem;">← Continuar Comprando</a>
         </div>
     `;
 }
@@ -226,21 +237,16 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             // Solo previene el comportamiento por defecto si NO es el icono del carrito
-            if (!this.classList.contains('cart-icon')) {
+            // Y si no es el enlace de "Continuar Comprando" dentro del carrito (que ya lo maneja toggleCart)
+            if (!this.classList.contains('cart-icon') && !this.classList.contains('continue-shopping')) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
                     // Si se está mostrando el carrito, ocúltalo primero
                     const cartSection = document.getElementById('carrito');
                     if (cartSection.classList.contains('active')) {
-                        toggleCart(); // Oculta el carrito
-                        // Espera a que la transición del carrito termine antes de desplazar
-                        setTimeout(() => {
-                            target.scrollIntoView({
-                                behavior: 'smooth',
-                                block: 'start'
-                            });
-                        }, 500); // Ajusta este tiempo para que coincida con la transición del carrito
+                        // Antes de ocultar, pasamos el destino del scroll a toggleCart
+                        toggleCart(this.getAttribute('href'));
                     } else {
                         target.scrollIntoView({
                             behavior: 'smooth',
