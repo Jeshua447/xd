@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CapStore - Tu tienda de gorras definitiva</title>
+    <link rel="icon" type="image/png" href="img/favicon.png"> <style>
+        /* Variables CSS para colores y espaciado */
+        :root {
+            --primary-gradient-start: #667eea;
+            --primary-gradient-end: #764ba2;
+            --secondary-gradient-start: #4ecdc4;
+            --secondary-gradient-end: #44a08d;
+            --text-color-light: #f4f4f4;
+            --text-color-dark: #333;
+            --card-background: rgba(255, 255, 255, 0.8);
+            --card-border-radius: 15px;
+            --shadow-light: rgba(0, 0, 0, 0.1);
+            --shadow-medium: rgba(0, 0, 0, 0.2);
+            --spacing-xs: 0.5rem;
+            --spacing-s: 1rem;
+            --spacing-m: 1.5rem;
+            --spacing-l: 2rem;
+            --spacing-xl: 3rem;
+            --transition-speed: 0.3s ease;
+        }
+
+        /* Reset y Estilos Generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth; /* Desplazamiento suave */
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color-dark);
+            background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-l) 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* Encabezado Principal */
+        .main-header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: var(--spacing-m) 0;
+            box-shadow: 0 2px 10px var(--shadow-medium);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .main-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0; /* Ajuste para el header */
+        }
+
+        .logo a {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-gradient-end);
+            text-shadow: 1px 1px 2px var(--shadow-light);
+        }
+
+        .main-nav ul {
+            display: flex;
+            gap: var(--spacing-l);
+        }
+
+        .main-nav a {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-color-dark);
+            padding: var(--spacing-xs) var(--spacing-s);
+            border-radius: 5px;
+            transition: background var(--transition-speed), color var(--transition-speed);
+        }
+
+        .main-nav a:hover {
+            background: var(--primary-gradient-end);
+            color: var(--text-color-light);
+        }
+
+        .cart-icon {
+            font-size: 2.2rem;
+            cursor: pointer;
+            position: relative;
+            padding: var(--spacing-xs);
+            border-radius: 5px;
+            transition: transform var(--transition-speed);
+        }
+
+        .cart-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #e74c3c;
+            color: white;
+            font-size: 0.9rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 50%;
+            font-weight: bold;
+            box-shadow: 0 2px 5px var(--shadow-medium);
+        }
+
+        /* Botones */
+        .button {
+            display: inline-block;
+            padding: var(--spacing-s) var(--spacing-m);
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        .primary-button {
+            background: linear-gradient(45deg, var(--secondary-gradient-start), var(--secondary-gradient-end));
+            color: white;
+            box-shadow: 0 5px 15px var(--shadow-light);
+        }
+
+        .primary-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px var(--shadow-medium);
+        }
+
+        /* Secciones de Contenido */
+        main {
+            flex-grow: 1;
+        }
+
+        section {
+            padding: var(--spacing-xl) 0;
+            text-align: center;
+        }
+
+        section h2 {
+            font-size: 2.8rem;
+            margin-bottom: var(--spacing-l);
+            color: var(--text-color-light);
+            text-shadow: 2px 2px 4px var(--shadow-medium);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('img/hero-bg.jpg') no-repeat center center/cover;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh; /* Ajusta la altura de la sección hero */
+            animation: fadeInUp 1s ease-out forwards;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-content h2 {
+            font-size: 3.5rem;
+            margin-bottom: var(--spacing-m);
+            line-height: 1.2;
+            color: white; /* Sobrescribe el color general de h2 para esta sección */
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: var(--spacing-xl);
+            opacity: 0.9;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Productos Section */
+        .products-section {
+            background: var(--card-background);
+            padding: var(--spacing-xl) 0;
+            box-shadow: inset 0 5px 15px var(--shadow-light);
+        }
+
+        .products-section h2 {
+            color: var(--text-color-dark);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-l);
+            margin-top: var(--spacing-xl);
+        }
+
+        .product-card {
+            background: white;
+            border-radius: var(--card-border-radius);
+            overflow: hidden;
+            box-shadow: 0 5px 15px var(--shadow-light);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px var(--shadow-medium);
+        }
+
+        .product-card-image {
+            width: 100%;
+            height: 200px; /* Altura fija para todas las imágenes */
+            object-fit: cover; /* Asegura que la imagen cubra el área sin distorsionarse */
+            border-radius: var(--card-border-radius) var(--card-border-radius) 0 0;
+        }
+
+        .product-info {
+            padding: var(--spacing-m);
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1; /* Permite que el info ocupe el espacio restante */
+        }
+
+        .product-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-xs);
+            color: var(--text-color-dark);
+        }
+
+        .product-info .price {
+            font-size: 1.3rem;
+            color: var(--primary-gradient-end);
+            font-weight: bold;
+            margin-bottom: var(--spacing-s);
+        }
+
+        .product-info .description {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: var(--spacing-m);
+            flex-grow: 1; /* Empuja el botón hacia abajo */
+        }
+
+        .product-card .buy-button {
+            width: 100%;
+            padding: var(--spacing-s);
+            font-size: 1rem;
+        }
+
+        /* Características Section */
+        .features-section {
+            background: linear-gradient(135deg, var(--primary-gradient-end) 0%, var(--primary-gradient-start) 100%);
+            color: var(--text-color-light);
+            padding: var(--spacing-xl) 0;
+            backdrop-filter: blur(5px);
+        }
+
+        .features-section h2 {
+            color: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-l);
+            margin-top: var(--spacing-xl);
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: var(--card-border-radius);
+            padding: var(--spacing-l);
+            box-shadow: 0 4px 15px var(--shadow-medium);
+            transition: transform var(--transition-speed);
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 20px var(--shadow-medium);
+        }
+
+        .feature-item h3 {
+            font-size: 1.8rem;
+            margin-bottom: var(--spacing-s);
+            color: white;
+        }
+
+        .feature-item p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Vender Sección */
+        .sell-section {
+            background: var(--card-background);
+            padding: var(--spacing-xl) 0;
+            box-shadow: inset 0 5px 15px var(--shadow-light);
+        }
+
+        .sell-section h2 {
+            color: var(--text-color-dark);
+        }
+
+        .sell-form {
+            max-width: 700px;
+            margin: var(--spacing-xl) auto 0 auto;
+            background: white;
+            padding: var(--spacing-l);
+            border-radius: var(--card-border-radius);
+            box-shadow: 0 5px 15px var(--shadow-light);
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-m);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: var(--spacing-xs);
+            font-weight: bold;
+            color: var(--text-color-dark);
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="url"],
+        .form-group input[type="email"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: var(--spacing-s);
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--primary-gradient-end);
+            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.2);
+            outline: none;
+        }
+
+        .sell-form .button {
+            width: 100%;
+            font-size: 1.2rem;
+            padding: var(--spacing-m);
+            margin-top: var(--spacing-m);
+        }
+
+        /* Contacto Sección */
+        .contact-section {
+            background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+            color: var(--text-color-light);
+            padding: var(--spacing-xl) 0;
+        }
+
+        .contact-section h2 {
+            color: white;
+        }
+
+        .contact-form {
+            max-width: 700px;
+            margin: var(--spacing-xl) auto 0 auto;
+            background: rgba(255, 255, 255, 0.15);
+            padding: var(--spacing-l);
+            border-radius: var(--card-border-radius);
+            box-shadow: 0 5px 15px var(--shadow-medium);
+            text-align: left;
+        }
+
+        .contact-form label {
+            color: white;
+        }
+
+        .contact-form .button {
+            width: 100%;
+            font-size: 1.2rem;
+            padding: var(--spacing-m);
+            margin-top: var(--spacing-m);
+        }
+
+        /* Carrito de Compras */
+        .cart-section {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            max-width: 450px;
+            height: 100%;
+            background: white;
+            box-shadow: -5px 0 15px var(--shadow-medium);
+            transform: translateX(100%); /* Inicialmente oculto */
+            transition: transform 0.5s ease-in-out;
+            z-index: 101;
+            overflow-y: auto;
+            padding: var(--spacing-l);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-section.active {
+            transform: translateX(0); /* Muestra el carrito */
+        }
+
+        .cart-section h2 {
+            color: var(--text-color-dark);
+            margin-bottom: var(--spacing-l);
+            text-align: center;
+            font-size: 2.2rem;
+        }
+
+        .cart-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: #666;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .empty-cart-icon {
+            font-size: 6rem;
+            margin-bottom: var(--spacing-m);
+            color: #ccc;
+        }
+
+        .empty-cart h3 {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-s);
+            color: var(--text-color-dark);
+        }
+
+        .cart-items {
+            flex-grow: 1;
+            margin-bottom: var(--spacing-l);
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-m) 0;
+            border-bottom: 1px solid #eee;
+            gap: var(--spacing-m);
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-info {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            text-align: left;
+        }
+
+        .cart-item-icon {
+            font-size: 2.5rem;
+            margin-right: var(--spacing-m);
+        }
+
+        .cart-item-details h4 {
+            font-size: 1.2rem;
+            color: var(--text-color-dark);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .cart-item-price {
+            font-size: 1rem;
+            color: #777;
+            font-weight: 600;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: var(--spacing-s);
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            padding: 0.2rem;
+        }
+
+        .quantity-btn {
+            background: var(--secondary-gradient-start);
+            color: white;
+            border: none;
+            padding: 0.3rem 0.6rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .quantity-btn:hover {
+            background: var(--secondary-gradient-end);
+        }
+
+        .quantity-display {
+            padding: 0 0.5rem;
+            font-weight: bold;
+            color: var(--text-color-dark);
+        }
+
+        .remove-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .remove-btn:hover {
+            background: #c0392b;
+        }
+
+        .cart-summary {
+            border-top: 1px solid #eee;
+            padding-top: var(--spacing-m);
+            text-align: right;
+        }
+
+        .cart-total {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--text-color-dark);
+            margin-bottom: var(--spacing-s);
+        }
+
+        .cart-total-price {
+            color: var(--primary-gradient-end);
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: var(--spacing-m);
+            font-size: 1.2rem;
+            background: linear-gradient(45deg, var(--primary-gradient-start), var(--primary-gradient-end));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px var(--shadow-medium);
+        }
+
+        .continue-shopping {
+            color: var(--primary-gradient-end);
+            text-decoration: underline;
+            font-size: 1rem;
+            cursor: pointer;
+            display: inline-block; /* Para aplicar margin-top si es necesario */
+            margin-top: var(--spacing-s);
+        }
+
+        /* Pie de Página */
+        .main-footer {
+            background: #333;
+            color: white;
+            padding: var(--spacing-m) 0;
+            text-align: center;
+            margin-top: auto; /* Empuja el footer al final */
+        }
+
+        .main-footer .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
+            padding: 0;
+        }
+
+        .social-links a {
+            margin-left: var(--spacing-s);
+        }
+
+        .social-links img {
+            filter: invert(1); /* Para que los iconos se vean bien en fondo oscuro */
+            transition: transform var(--transition-speed);
+        }
+
+        .social-links img:hover {
+            transform: scale(1.1);
+        }
+
+        /* Notificaciones */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px var(--shadow-medium);
+            z-index: 1000;
+            animation: slideIn 0.5s ease forwards, fadeOut 0.5s ease 2.5s forwards;
+            opacity: 0; /* Asegura que no sea visible antes de la animación */
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* Media Queries para Responsividad */
+        @media (max-width: 768px) {
+            .main-header .container {
+                flex-direction: column;
+                gap: var(--spacing-m);
+                padding: var(--spacing-m) 0;
+            }
+
+            .main-nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: var(--spacing-m);
+            }
+
+            .logo {
+                margin-bottom: var(--spacing-s);
+            }
+
+            .hero-content h2 {
+                font-size: 2.5rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+
+            section h2 {
+                font-size: 2.2rem;
+            }
+
+            .product-grid,
+            .features-grid {
+                grid-template-columns: 1fr; /* Una columna en móviles */
+            }
+
+            .product-card {
+                max-width: 400px; /* Limita el ancho de las tarjetas en móvil */
+                margin: 0 auto;
+            }
+
+            .form-group input,
+            .form-group textarea,
+            .form-group select,
+            .button {
+                font-size: 1rem;
+                padding: var(--spacing-s);
+            }
+
+            .sell-form, .contact-form {
+                padding: var(--spacing-m);
+            }
+
+            .cart-section {
+                max-width: 100%; /* El carrito ocupa todo el ancho en móvil */
+            }
+
+            .cart-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--spacing-s);
+            }
+
+            .cart-item-actions {
+                width: 100%;
+                flex-direction: row; /* Controles de cantidad en línea */
+                justify-content: space-between;
+            }
+
+            .remove-btn {
+                margin-top: 0;
+            }
+
+            .main-footer .container {
+                flex-direction: column;
+                gap: var(--spacing-s);
+            }
+
+            .social-links {
+                margin-top: var(--spacing-s);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <h1 class="logo"><a href="#">CapStore 🧢</a></h1>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#productos">Productos</a></li>
+                    <li><a href="#caracteristicas">Características</a></li>
+                    <li><a href="#vender">Vender</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </nav>
+            <div class="cart-icon" onclick="toggleCart()">
+                🛒
+                <span class="cart-count">0</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="inicio" class="hero-section">
+            <div class="hero-content">
+                <h2>Encuentra la gorra perfecta para tu estilo</h2>
+                <p>Miles de diseños, las mejores marcas, envío rápido.</p>
+                <a href="#productos" class="button primary-button">Explorar Gorras</a>
+            </div>
+        </section>
+
+        <section id="productos" class="products-section">
+            <div class="container">
+                <h2>Nuestras Gorras Destacadas</h2>
+                <div class="product-grid">
+                    <div class="product-card">
+                        <img src="img/depo.jpg"
+                             srcset="img/depo-small.jpg 480w, img/depo-medium.jpg 800w, img/depo.jpg 1200w"
+                             sizes="(max-width: 600px) 480px, (max-width: 1200px) 800px, 1200px"
+                             alt="Gorra Deportiva Nike" loading="lazy" class="product-card-image">
+                        <div class="product-info">
+                            <h3>Nike Deportiva</h3>
+                            <p class="price">$850 MXN</p>
+                            <p class="description">Ideal para running o un look casual.</p>
+                            <button class="button buy-button" data-name="Nike Deportiva" data-price="850" data-icon="🧢">Agregar al Carrito</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="img/classic.jpg"
+                             srcset="img/classic-small.jpg 480w, img/classic-medium.jpg 800w, img/classic.jpg 1200w"
+                             sizes="(max-width: 600px) 480px, (max-width: 1200px) 800px, 1200px"
+                             alt="Gorra Clásica Adidas" loading="lazy" class="product-card-image">
+                        <div class="product-info">
+                            <h3>Adidas Clásica</h3>
+                            <p class="price">$700 MXN</p>
+                            <p class="description">Un diseño atemporal para cualquier ocasión.</p>
+                            <button class="button buy-button" data-name="Adidas Clásica" data-price="700" data-icon="🎩">Agregar al Carrito</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="img/style.jpg"
+                             srcset="img/style-small.jpg 480w, img/style-medium.jpg 800w, img/style.jpg 1200w"
+                             sizes="(max-width: 600px) 480px, (max-width: 1200px) 800px, 1200px"
+                             alt="Gorra de Estilo Urbano" loading="lazy" class="product-card-image">
+                        <div class="product-info">
+                            <h3>Estilo Urbano</h3>
+                            <p class="price">$950 MXN</p>
+                            <p class="description">Perfecta para destacar en la ciudad.</p>
+                            <button class="button buy-button" data-name="Estilo Urbano" data-price="950" data-icon="👑">Agregar al Carrito</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="img/urbana.jpg"
+                             srcset="img/urbana-small.jpg 480w, img/urbana-medium.jpg 800w, img/urbana.jpg 1200w"
+                             sizes="(max-width: 600px) 480px, (max-width: 1200px) 800px, 1200px"
+                             alt="Gorra Negra Minimalista" loading="lazy" class="product-card-image">
+                        <div class="product-info">
+                            <h3>Negra Minimalista</h3>
+                            <p class="price">$600 MXN</p>
+                            <p class="description">Elegancia y sencillez en un solo accesorio.</p>
+                            <button class="button buy-button" data-name="Negra Minimalista" data-price="600" data-icon="⚫">Agregar al Carrito</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <img src="img/vintage.jpg"
+                             srcset="img/vintage-small.jpg 480w, img/vintage-medium.jpg 800w, img/vintage.jpg 1200w"
+                             sizes="(max-width: 600px) 480px, (max-width: 1200px) 800px, 1200px"
+                             alt="Gorra Retro Vintage" loading="lazy" class="product-card-image">
+                        <div class="product-info">
+                            <h3>Retro Vintage</h3>
+                            <p class="price">$1100 MXN</p>
+                            <p class="description">Un toque nostálgico para tu outfit.</p>
+                            <button class="button buy-button" data-name="Retro Vintage" data-price="1100" data-icon="💾">Agregar al Carrito</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="caracteristicas" class="features-section">
+            <div class="container">
+                <h2>¿Por qué elegir CapStore?</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <h3>Variedad Inigualable</h3>
+                        <p>Descubre una vasta colección de gorras de todas las marcas y estilos.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>Calidad Garantizada</h3>
+                        <p>Solo vendemos gorras auténticas y de la más alta calidad.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>Envío Rápido y Seguro</h3>
+                        <p>Recibe tus gorras en la puerta de tu casa en tiempo récord.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="vender" class="sell-section">
+            <div class="container">
+                <h2>¿Quieres vender tus gorras?</h2>
+                <p>Publica tus gorras de forma rápida y sencilla. ¡Únete a nuestra comunidad!</p>
+                <form id="sellForm" class="sell-form">
+                    <div class="form-group">
+                        <label for="productName">Nombre de la Gorra:</label>
+                        <input type="text" id="productName" name="productName" placeholder="Ej. Gorra Deportiva Nike" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productDesc">Descripción:</label>
+                        <textarea id="productDesc" name="productDesc" placeholder="Describe tu gorra..." rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Precio (MXN):</label>
+                        <input type="number" id="productPrice" name="productPrice" placeholder="Ej. 750" min="50" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productImage">URL de la Imagen:</label>
+                        <input type="url" id="productImage" name="productImage" placeholder="Ej. https://misitio.com/gorra.jpg" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productState">Estado:</label>
+                        <select id="productState" name="productState" required>
+                            <option value="">Selecciona un estado</option>
+                            <option value="nuevo">Nuevo</option>
+                            <option value="usado-excelente">Usado (Excelente)</option>
+                            <option value="usado-bueno">Usado (Bueno)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="button primary-button">Publicar Gorra</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="contacto" class="contact-section">
+            <div class="container">
+                <h2>Contáctanos</h2>
+                <p>¿Tienes alguna pregunta o sugerencia? ¡Estamos aquí para ayudarte!</p>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Nombre:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Correo Electrónico:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Mensaje:</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="button primary-button">Enviar Mensaje</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="carrito" class="cart-section">
+            <div class="container">
+                <h2>Tu Carrito de Compras</h2>
+                <div id="cart-content" class="cart-content">
+                    </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 CapStore. Todos los derechos reservados.</p>
+            <div class="social-links">
+                <a href="#"><img src="img/facebook.png" alt="Facebook" width="24" height="24"></a>
+                <a href="#"><img src="img/twitter.png" alt="Twitter" width="24" height="24"></a>
+                <a href="#"><img src="img/instagram.png" alt="Instagram" width="24" height="24"></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
