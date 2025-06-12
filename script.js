@@ -123,7 +123,7 @@ function renderCart() {
             <p style="color: #666; margin-bottom: 1rem;">${totalItems} producto${totalItems !== 1 ? 's' : ''} en tu carrito</p>
             <button class="checkout-btn" onclick="checkout()">Proceder al Pago 🚀</button>
             <br><br>
-            <a href="#" class="continue-shopping" onclick="toggleCart()" style="font-size: 0.9rem;">← Continuar Comprando</a>
+            <a href="Productos" class="continue-shopping" onclick="toggleCart()" style="font-size: 0.9rem;">← Continuar Comprando</a>
         </div>
     `;
 }
