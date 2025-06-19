@@ -554,6 +554,7 @@
                     <li><a href="#productos">Productos</a></li>
                     <li><a href="#caracteristicas">Características</a></li>
                     <li><a href="#vender">Vender</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
                 </ul>
             </nav>
             <div class="cart-icon" onclick="toggleCart()">
@@ -572,68 +573,77 @@
             </div>
         </section>
 
-       <section id="productos" class="products">
+        <section id="productos" class="products-section">
             <div class="container">
-                <h2>Nuestros Productos</h2>
-                <div class="products-grid">
+                <h2>Nuestras Gorras Destacadas</h2>
+                <div class="product-grid">
                     <div class="product-card">
-                        <div class="product-image"><img src="img/depo.jpg" alt="Gorra Deportiva Nike" style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px 15px 0 0;"></div>
+                        <img src="img/depo.jpg"
+                             srcset="img/depo-small.jpg 480w, img/depo-medium.jpg 800w, img/depo.jpg 1200w"
+                             sizes="(max-width: 600px) 480px, (max-width: 1200px) 800px, 1200px"
+                             alt="Gorra Deportiva Nike" loading="lazy" class="product-card-image">
                         <div class="product-info">
-                            <h3>Gorra Deportiva Nike</h3>
-                            <p>Gorra deportiva original Nike, perfecta para entrenar</p>
-                            <div class="product-price">$850 MXN</div>
-                            <button class="buy-button" onclick="addToCart('Nike Deportiva', 850, '🧢')">Agregar al Carrito</button>
+                            <h3>Nike Deportiva</h3>
+                            <p class="price">$850 MXN</p>
+                            <p class="description">Ideal para running o un look casual.</p>
+                            <button class="button buy-button" data-name="Nike Deportiva" data-price="850" data-icon="🧢">Agregar al Carrito</button>
                         </div>
                     </div>
+
                     <div class="product-card">
-                        <div class="product-image"><img src="img/yanke.jpg" alt="Gorra New Era Yankees" style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px 15px 0 0;"></div>
+                        <img src="img/classic.jpg"
+                             srcset="img/classic-small.jpg 480w, img/classic-medium.jpg 800w, img/classic.jpg 1200w"
+                             sizes="(max-width: 600px) 480px, (max-width: 1200px) 800px, 1200px"
+                             alt="Gorra Clásica Adidas" loading="lazy" class="product-card-image">
                         <div class="product-info">
-                            <h3>Gorra New Era Yankees</h3>
-                            <p>Clásica gorra de los Yankees, edición limitada</p>
-                            <div class="product-price">$1,200 MXN</div>
-                            <button class="buy-button" onclick="addToCart('New Era Yankees', 1200, '👑')">Agregar al Carrito</button>
+                            <h3>Adidas Clásica</h3>
+                            <p class="price">$700 MXN</p>
+                            <p class="description">Un diseño atemporal para cualquier ocasión.</p>
+                            <button class="button buy-button" data-name="Adidas Clásica" data-price="700" data-icon="🎩">Agregar al Carrito</button>
                         </div>
                     </div>
+
                     <div class="product-card">
-                        <div class="product-image"><img src="img/perso.jpg" alt="Gorra Personalizada" style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px 15px 0 0;"></div>
+                        <img src="img/style.jpg"
+                             srcset="img/style-small.jpg 480w, img/style-medium.jpg 800w, img/style.jpg 1200w"
+                             sizes="(max-width: 600px) 480px, (max-width: 1200px) 800px, 1200px"
+                             alt="Gorra de Estilo Urbano" loading="lazy" class="product-card-image">
                         <div class="product-info">
-                            <h3>Gorra Personalizada</h3>
-                            <p>Diseña tu propia gorra con bordado personalizado</p>
-                            <div class="product-price">$650 MXN</div>
-                            <button class="buy-button" onclick="addToCart('Personalizada', 650, '🎨')">Agregar al Carrito</button>
+                            <h3>Estilo Urbano</h3>
+                            <p class="price">$950 MXN</p>
+                            <p class="description">Perfecta para destacar en la ciudad.</p>
+                            <button class="button buy-button" data-name="Estilo Urbano" data-price="950" data-icon="👑">Agregar al Carrito</button>
                         </div>
                     </div>
+
                     <div class="product-card">
-                        <div class="product-image"><img src="img/vintage.jpg" alt="Gorra Trucker Vintage" style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px 15px 0 0;"></div>
+                        <img src="img/urbana.jpg"
+                             srcset="img/urbana-small.jpg 480w, img/urbana-medium.jpg 800w, img/urbana.jpg 1200w"
+                             sizes="(max-width: 600px) 480px, (max-width: 1200px) 800px, 1200px"
+                             alt="Gorra Negra Minimalista" loading="lazy" class="product-card-image">
                         <div class="product-info">
-                            <h3>Gorra Trucker Vintage</h3>
-                            <p>Estilo retro con malla trasera, muy cómoda</p>
-                            <div class="product-price">$450 MXN</div>
-                            <button class="buy-button" onclick="addToCart('Trucker Vintage', 450, '🌟')">Agregar al Carrito</button>
+                            <h3>Negra Minimalista</h3>
+                            <p class="price">$600 MXN</p>
+                            <p class="description">Elegancia y sencillez en un solo accesorio.</p>
+                            <button class="button buy-button" data-name="Negra Minimalista" data-price="600" data-icon="⚫">Agregar al Carrito</button>
                         </div>
                     </div>
+
                     <div class="product-card">
-                        <div class="product-image"><img src="img/spa.jpg" alt=">Gorra Snapback" style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px 15px 0 0;"></div>
-                        <div class="product-info"></div>
+                        <img src="img/vintage.jpg"
+                             srcset="img/vintage-small.jpg 480w, img/vintage-medium.jpg 800w, img/vintage.jpg 1200w"
+                             sizes="(max-width: 600px) 480px, (max-width: 1200px) 800px, 1200px"
+                             alt="Gorra Retro Vintage" loading="lazy" class="product-card-image">
                         <div class="product-info">
-                            <h3>Gorra Snapback</h3>
-                            <p>Gorra snapback con visera plana, estilo urbano</p>
-                            <div class="product-price">$750 MXN</div>
-                            <button class="buy-button" onclick="addToCart('Snapback', 750, '⚡')">Agregar al Carrito</button>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-image"><img src="img/adi.jpg" alt="Gorra Adidas Original" style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px 15px 0 0;"></div>
-                        <div class="product-info">
-                            <h3>Gorra Adidas Original</h3>
-                            <p>Gorra Adidas clásica con las tres rayas icónicas</p>
-                            <div class="product-price">$900 MXN</div>
-                            <button class="buy-button" onclick="addToCart('Adidas Original', 900, '🏆')">Agregar al Carrito</button>
+                            <h3>Retro Vintage</h3>
+                            <p class="price">$1100 MXN</p>
+                            <p class="description">Un toque nostálgico para tu outfit.</p>
+                            <button class="button buy-button" data-name="Retro Vintage" data-price="1100" data-icon="💾">Agregar al Carrito</button>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>  
+        </section>
 
         <section id="caracteristicas" class="features-section">
             <div class="container">
