@@ -6,21 +6,44 @@ const CURRENCY_SYMBOL = ' MXN'; // Símbolo de moneda para el display
 // Actualiza el contador de artículos en el icono del carrito
 function updateCartDisplay() {
     const totalItemsInCart = cart.reduce((sum, item) => sum + item.quantity, 0);
-    document.querySelector('.cart-count').textContent = totalItemsInCart;
+    const cartCountElement = document.querySelector('.cart-count');
+    if (cartCountElement) {
+        cartCountElement.textContent = totalItemsInCart;
+        cartCountElement.style.display = totalItemsInCart > 0 ? 'flex' : 'none';
+    }
 }
 
-// Agrega un producto al carrito
-function addToCart(productName, price, icon, event) {
+// Agrega un producto al carrito - FUNCIÓN CORREGIDA
+function addToCart(productName, price, icon) {
+    // Validar parámetros
+    if (!productName || !price || !icon) {
+        console.error('Error: Parámetros inválidos para agregar al carrito', {
+            productName,
+            price,
+            icon
+        });
+        showNotification('Error al agregar producto al carrito');
+        return;
+    }
+
+    // Validar que el precio sea un número válido
+    const numericPrice = parseFloat(price);
+    if (isNaN(numericPrice) || numericPrice <= 0) {
+        console.error('Error: Precio inválido', price);
+        showNotification('Error: Precio inválido');
+        return;
+    }
+
     // Busca si el producto ya existe en el carrito
     const existingItem = cart.find(item => item.name === productName);
 
     if (existingItem) {
-        existingItem.quantity +=1 ;
+        existingItem.quantity += 1;
     } else {
         cart.push({
-            id: Date.now(), // ID único simple para cada artículo (para el cliente)
+            id: Date.now(), // ID único simple para cada artículo
             name: productName,
-            price: price,
+            price: numericPrice,
             icon: icon,
             quantity: 1
         });
@@ -29,31 +52,42 @@ function addToCart(productName, price, icon, event) {
     updateCartDisplay(); // Actualiza el número en el icono del carrito
 
     // Animación para el botón "Agregar al Carrito"
-    const button = event.target;
-    const originalText = button.textContent;
-    const originalBackground = button.style.background; // Guarda el fondo original
+    // Buscar el botón que se clickeó usando el nombre del producto
+    const buttons = document.querySelectorAll('.buy-button');
+    let targetButton = null;
+    
+    buttons.forEach(button => {
+        const buttonText = button.getAttribute('onclick');
+        if (buttonText && buttonText.includes(productName)) {
+            targetButton = button;
+        }
+    });
 
-    button.textContent = '¡Agregado! ✓';
-    button.style.background = 'linear-gradient(45deg, #27ae60, #2ecc71)'; // Color de éxito
+    if (targetButton) {
+        const originalText = targetButton.textContent;
+        const originalBackground = targetButton.style.background;
 
-    setTimeout(() => {
-        button.textContent = originalText;
-        button.style.background = originalBackground; // Vuelve al color original
-    }, 2000);
+        targetButton.textContent = '¡Agregado! ✓';
+        targetButton.style.background = 'linear-gradient(45deg, #27ae60, #2ecc71)';
+
+        setTimeout(() => {
+            targetButton.textContent = originalText;
+            targetButton.style.background = originalBackground;
+        }, 2000);
+    }
 
     showNotification(`${productName} agregada al carrito`);
 }
 
 // Alterna la visibilidad de la sección del carrito
-// Ahora acepta un argumento opcional `scrollToTarget` para desplazar a una sección específica
 function toggleCart(scrollToTarget = null) {
     const cartSection = document.getElementById('carrito');
-    const otherSections = document.querySelectorAll('main > section:not(#carrito)'); // Todas las secciones excepto el carrito
+    const otherSections = document.querySelectorAll('main > section:not(#carrito)');
 
     if (cartSection.classList.contains('active')) {
         // Ocultar carrito
         cartSection.classList.remove('active');
-        otherSections.forEach(section => section.style.display = 'block'); // Vuelve a mostrar todas las secciones
+        otherSections.forEach(section => section.style.display = 'block');
 
         // Si se especificó un objetivo de scroll, vamos a él
         if (scrollToTarget) {
@@ -75,7 +109,7 @@ function toggleCart(scrollToTarget = null) {
         // Ocultar otras secciones y mostrar carrito
         otherSections.forEach(section => {
             if (section.style.display !== 'none') {
-                section.classList.add('active-view'); // Marca la sección que estaba visible
+                section.classList.add('active-view');
             }
             section.style.display = 'none';
         });
@@ -88,6 +122,10 @@ function toggleCart(scrollToTarget = null) {
 function renderCart() {
     const cartContent = document.getElementById('cart-content');
     
+    if (!cartContent) {
+        console.error('Error: Elemento cart-content no encontrado');
+        return;
+    }
 
     if (cart.length === 0) {
         cartContent.innerHTML = `
@@ -95,7 +133,7 @@ function renderCart() {
                 <div class="empty-cart-icon">🛒</div>
                 <h3>Tu carrito está vacío</h3>
                 <p style="color: #666; margin-bottom: 2rem;">¡Agrega algunos productos increíbles!</p>
-                <a href="#productos" class="button primary-button continue-shopping" onclick="toggleCart('#productos')">Continuar Comprando</a>
+                <a href="#productos" class="continue-shopping" onclick="toggleCart('#productos')">Continuar Comprando</a>
             </div>
         `;
         return;
@@ -146,11 +184,11 @@ function changeQuantity(itemId, change) {
     if (item) {
         item.quantity += change;
         if (item.quantity <= 0) {
-            removeFromCart(itemId); // Elimina si la cantidad llega a 0 o menos
+            removeFromCart(itemId);
             return;
         }
         updateCartDisplay();
-        renderCart(); // Vuelve a renderizar para que los cambios se vean
+        renderCart();
     }
 }
 
@@ -161,7 +199,7 @@ function removeFromCart(itemId) {
         const removedItem = cart[itemIndex];
         cart.splice(itemIndex, 1);
         updateCartDisplay();
-        renderCart(); // Vuelve a renderizar para que los cambios se vean
+        renderCart();
         showNotification(`${removedItem.name} eliminada del carrito`);
     }
 }
@@ -176,77 +214,81 @@ function checkout() {
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     showNotification(`¡Compra realizada por $${total.toLocaleString()}${CURRENCY_SYMBOL}! Gracias por tu compra 🎉`);
 
-    cart = []; // Vacía el carrito
+    cart = [];
     updateCartDisplay();
-    renderCart(); // Vuelve a renderizar para mostrar el mensaje de carrito vacío
+    renderCart();
 }
 
 // --- Funciones de Utilidad / Notificaciones ---
 
 // Muestra una notificación temporal
 function showNotification(message) {
+    // Crear elemento de notificación
     const notification = document.createElement('div');
-    notification.className = 'notification'; // Usa la clase CSS para estilos y animaciones
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        z-index: 1000;
+        font-weight: bold;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+    `;
     notification.textContent = message;
     document.body.appendChild(notification);
 
+    // Animar entrada
     setTimeout(() => {
-        notification.remove();
-    }, 3000); // La notificación desaparece después de 3 segundos
+        notification.style.transform = 'translateX(0)';
+    }, 10);
+
+    // Animar salida y eliminar
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
 }
 
 // --- Inicialización y Manejo de Eventos del DOM ---
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Adjuntar event listener para los botones "Agregar al Carrito"
-    document.querySelectorAll('.buy-button').forEach(button => {
-        button.addEventListener('click', function(event) {
-            // Obtener los datos del producto de los atributos 'data-'
-            const productName = this.dataset.name;
-            const productPrice = parseFloat(this.dataset.price);
-            const productIcon = this.dataset.icon;
-            addToCart(productName, productPrice, productIcon, event);
-        });
-    });
-
     // Manejo del envío del formulario de venta
-    document.getElementById('sellForm').addEventListener('submit', function(e) {
-        e.preventDefault(); // Previene el envío por defecto del formulario
+    const sellForm = document.getElementById('sellForm');
+    if (sellForm) {
+        sellForm.addEventListener('submit', function(e) {
+            e.preventDefault();
 
-        // Simula la recolección de datos del formulario
-        const formData = new FormData(this);
-        const productData = {};
-        for (let [key, value] of formData.entries()) {
-            productData[key] = value;
-        }
+            // Simula la recolección de datos del formulario
+            const formData = new FormData(this);
+            const productData = {};
+            for (let [key, value] of formData.entries()) {
+                productData[key] = value;
+            }
 
-        // Aquí podrías enviar 'productData' a un servidor real
-        console.log('Datos de la gorra a publicar:', productData);
-
-        showNotification('¡Tu gorra ha sido publicada exitosamente!');
-        this.reset(); // Limpia el formulario después del envío
-    });
-
-    // Manejo del envío del formulario de contacto (ejemplo, sin funcionalidad real)
-    document.querySelector('.contact-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        showNotification('¡Mensaje enviado! Nos pondremos en contacto pronto.');
-        this.reset();
-    });
+            console.log('Datos de la gorra a publicar:', productData);
+            showNotification('¡Tu gorra ha sido publicada exitosamente!');
+            this.reset();
+        });
+    }
 
     // Desplazamiento suave para los enlaces de navegación
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
-            // Solo previene el comportamiento por defecto si NO es el icono del carrito
-            // Y si no es el enlace de "Continuar Comprando" dentro del carrito (que ya lo maneja toggleCart)
             if (!this.classList.contains('cart-icon') && !this.classList.contains('continue-shopping')) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    // Si se está mostrando el carrito, ocúltalo primero
                     const cartSection = document.getElementById('carrito');
-                    if (cartSection.classList.contains('active')) {
-                        // Antes de ocultar, pasamos el destino del scroll a toggleCart
+                    if (cartSection && cartSection.classList.contains('active')) {
                         toggleCart(this.getAttribute('href'));
                     } else {
                         target.scrollIntoView({
