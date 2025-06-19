@@ -87,6 +87,7 @@ function toggleCart(scrollToTarget = null) {
 // Renderiza el contenido del carrito
 function renderCart() {
     const cartContent = document.getElementById('cart-content');
+    
 
     if (cart.length === 0) {
         cartContent.innerHTML = `
