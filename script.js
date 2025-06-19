@@ -15,7 +15,7 @@ function addToCart(productName, price, icon, event) {
     const existingItem = cart.find(item => item.name === productName);
 
     if (existingItem) {
-        existingItem.quantity;
+        existingItem.quantity +=1 ;
     } else {
         cart.push({
             id: Date.now(), // ID único simple para cada artículo (para el cliente)
